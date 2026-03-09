@@ -4,7 +4,6 @@
  * @typedef {{x: number, y: number}}    Point
  * @typedef {HTMLAnchorElement|Element|HTMLInputElement}    ClickableElement
  */
-/* eslint-disable no-unused-vars */
 let docElem = document.documentElement;
 
 // General Purpose Variables

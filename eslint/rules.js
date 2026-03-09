@@ -6,7 +6,7 @@ module.exports = {
 		'quotes':                      'off',
 		'curly':                       'off',
 		'keyword-spacing':             'off',
-		'no-unused-vars':              ['error', { 'vars': 'local', 'args': 'none' }],
+		'no-unused-vars':              ['error', { 'vars': 'local', 'args': 'none', 'caughtErrors': 'none' }],
 		'array-bracket-spacing':       ['error', 'never'],
 		'computed-property-spacing':   'off',
 		'lines-around-comment':        'off',
