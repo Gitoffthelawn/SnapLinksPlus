@@ -6,15 +6,14 @@ const gulp                 = require('gulp');
 const { series, parallel } = gulp;
 
 // const babel      = require('gulp-babel');
-const del = require('del').sync;
 const cp  = require('child_process');
 // const sourcemaps = require('gulp-sourcemaps');
 const hb  = require('gulp-hb');
 const fs  = require('fs');
 
 // const gutil  = require('gulp-util');
-const rename = require('gulp-rename');
-const merge  = require('merge-stream');
+const rename       = require('gulp-rename');
+const { finished } = require('stream/promises');
 
 let execDefaultOpts = {
 	stdio: 'inherit',
@@ -93,39 +92,39 @@ const watchOpts = {
  *  General Building Tasks
  */
 
-function buildTmp() {
-	del(['./build/tmp']);
+async function buildTmp() {
+	fs.rmSync('./build/tmp', { recursive: true, force: true });
 
-	return merge(...
-		Array.from(TaskGlobs.keys())
-			.map((key) =>
-				gulp.src(TaskGlobs.get(key))
+	await Promise.all(
+		Array.from(TaskGlobs.entries())
+			.map(([key, globs]) => finished(
+				gulp.src(globs)
 					.pipe(gulp.dest(`./build/tmp/${key}`))
-			)
+			))
 	);
 }
 
 let webext = (cmd, data) => `yarn run web-ext ${cmd} -s ${data.BuildPath} -a ${data.ArtifactsPath} `;
 
-function buildFor({ BuildPath, BuildData }) {
-	del(BuildPath);
+async function buildFor({ BuildPath, BuildData }) {
+	fs.rmSync(BuildPath, { recursive: true, force: true });
 
-	return merge(
-		gulp.src('./build/tmp/**')
-			.pipe(gulp.dest(BuildPath)),
-		gulp.src('src/templates/manifest.hbs')
-			.pipe(
-				hb()
-					.helpers(require('handlebars-cond'))
-					.data('./package.json')
-					.data(BuildData)
-					.data(GeneralBuildConfig)
-			)
-			.pipe(rename({
-				extname: '.json',
-			}))
-			.pipe(gulp.dest(BuildPath))
-	);
+	await Promise.all([
+		finished(gulp.src('./build/tmp/**')
+			.pipe(gulp.dest(BuildPath))),
+		finished(
+			gulp.src('src/templates/manifest.hbs')
+				.pipe(
+					hb()
+						.helpers(require('handlebars-cond'))
+						.data('./package.json')
+						.data(BuildData)
+						.data(GeneralBuildConfig)
+				)
+				.pipe(rename({ extname: '.json' }))
+				.pipe(gulp.dest(BuildPath))
+		),
+	]);
 }
 
 /*************************************************************************************************
