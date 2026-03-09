@@ -30,10 +30,13 @@
 	},
 
 {{#Firefox}}
-		"applications":       {
+		"browser_specific_settings": {
 			"gecko": {
-				"id":                 "snaplinks@snaplinks.mozdev.org",
-				"strict_min_version": "63.0"
+				"id":                        "snaplinks@snaplinks.mozdev.org",
+				"strict_min_version":        "142.0",
+				"data_collection_permissions": {
+					"required": ["none"]
+				}
 			}
 		},
 {{/Firefox}}

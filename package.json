@@ -29,7 +29,7 @@
 		"handlebars-cond" :       "^1.0.3",
 		"jest" :                  "^30.2.0",
 		"run-sequence" :          "^2.2.1",
-		"web-ext" :               "^8.2.0",
+		"web-ext" :               "^9.4.0",
 		"webextension-polyfill" : "^0.12.0"
 	},
 	"scripts" :        {
@@ -37,7 +37,7 @@
 		"lint-fix": "eslint --fix src/",
 		"test" :   "jest",
 		"build" :  "gulp",
-		"run-ff" : "web-ext --config=.webext-ff.js run"
+		"run-ff" : "web-ext --config=.webext-ff.cjs run"
 	},
 	"dependencies" :   {
 		"lit-element": "^4.0.0"
